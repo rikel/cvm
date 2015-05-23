@@ -32,6 +32,9 @@ class BaseSVM(object):
                 X = np.vstack((X, X_sv))
                 y = np.array(list(y) + list(y_sv))
         model = self.create_model()
+
+        X, y = self._deleteduplicates(X, y)
+
         model.fit(X, y)
         if len(model.support_) < len(y) / 2:
             return self._returniterator(model.support_, X, y)
@@ -66,6 +69,9 @@ class BaseSVM(object):
         y = np.array(ys)
         return X, y
 
+    def _deleteduplicates(self, X, y):
+        useless, unique_index = np.unique(X.dot(np.random.rand(X.shape[1])), return_index=True)
+        return X[list(unique_index), :], y[list(unique_index)]
 
 
 class SVC(BaseSVM):
