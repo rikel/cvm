@@ -24,8 +24,21 @@ class BaseSVM(object):
     def predict(self, features):
         return self.model.predict(features)
 
-    def _reduce(self, iterator):
+    def _reduce(self, sv_vals, iterator):
         X, y = self._readiterator(iterator)
+        if sv_vals != -1:
+            X_sv, y_sv = self._readSV(sv_vals)
+
+            print "Shape SV: ", X_sv.shape, y_sv.shape
+            print "Shape X,y: ", X.shape, y.shape
+
+            if X.shape[1] == X_sv.shape[1]:
+                print "Shape X: ", X.shape
+                print "Shape X_sv: ", X_sv.shape
+                X = np.vstack((X, X_sv))
+                
+                # y = np.vstack((y, y_sv))
+                y = np.array(list(y) + list(y_sv))
         model = self.create_model()
         model.fit(X, y)
         if len(model.support_) < len(y) / 2:
@@ -43,7 +56,6 @@ class BaseSVM(object):
         for elem in iterator:
             ys.append(elem.label)
             xs.append(elem.features)
-
         X = np.array(xs)
         y = np.array(ys)
         return X, y
@@ -51,6 +63,17 @@ class BaseSVM(object):
     def _returniterator(self, indices, X, y):
         for i in indices:
             yield LabeledPoint(y[i], X[i])
+
+    def _readSV(self, data):
+        ys = []
+        xs = []
+        for elem in data:
+            xs.append(elem.features)
+            ys.append(elem.label)
+        X = np.array(xs)
+        y = np.array(ys)
+        return X, y
+
 
 
 class SVC(BaseSVM):
