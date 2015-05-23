@@ -28,16 +28,8 @@ class BaseSVM(object):
         X, y = self._readiterator(iterator)
         if sv_vals != -1:
             X_sv, y_sv = self._readSV(sv_vals)
-
-            print "Shape SV: ", X_sv.shape, y_sv.shape
-            print "Shape X,y: ", X.shape, y.shape
-
             if X.shape[1] == X_sv.shape[1]:
-                print "Shape X: ", X.shape
-                print "Shape X_sv: ", X_sv.shape
                 X = np.vstack((X, X_sv))
-                
-                # y = np.vstack((y, y_sv))
                 y = np.array(list(y) + list(y_sv))
         model = self.create_model()
         model.fit(X, y)
