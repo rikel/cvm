@@ -10,7 +10,7 @@ from __future__ import division
 
 import numpy as np
 
-def cascade(labeledPointRDD, reducer, nmax, iter_left=1, last_sv=-1):
+def cascade(labeledPointRDD, reducer, nmax, iter_left=2, last_sv=-1):
 
     print "Entering Cascade: ", iter_left
 
