@@ -29,18 +29,18 @@ class BaseSVM(Model):
                 y = np.array(list(y) + list(y_sv))
 
         # if few datapoints, don't thin further
-        if len(y) < self.nmax/2:
-            return self._returniterator(xrange(len(y)), X, y)
+        # if len(y) < self.nmax/2:
+        #   return self._returniterator(xrange(len(y)), X, y)
 
         model = self.create_model()
 
         X, y = self._deleteduplicates(X, y)
 
         model.fit(X, y)
-        if len(model.support_) < len(y) / 2:
+        if len(model.support_) < self.nmax/2:
             return self._returniterator(model.support_, X, y)
 
-        vectors_lost = len(model.support_) - len(y)/2
+        vectors_lost = len(model.support_) - self.nmax/2
         self.lost += vectors_lost
         print 'Warning: {} relevant support vectors thrown away!'.format(vectors_lost)
         random_indices = np.random.choice(model.support_, len(y) / 2, replace=False)
